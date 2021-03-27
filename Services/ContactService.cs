@@ -37,7 +37,7 @@ namespace DataManagementGuiApp.Services
             }
 
             //Create contact info model list
-            var contactInfoModelList = new List<ContactInfoModel>();
+            var contactInfoModelList = new List<ContactInfoModel>();    
             for(int i = 0; i < contactRecords.Count; i++)
             {
                 contactInfoModelList.Add(new ContactInfoModel
@@ -90,13 +90,9 @@ namespace DataManagementGuiApp.Services
 
             // Find the record to delete
             var contactToBeDeleted = contactInfoModelList.Find(x => x.ContactModel.Id == contactId);
-            //var addressToBeDeleted = contactInfoData.Find(x => x.AddressModel.ContactId == contactId);
-            //var phoneToBeDeleted = contactInfoData.Find(x => x.PhoneModel.ContactId == contactId);
 
             // Remove the record to delete
             contactInfoModelList.Remove(contactToBeDeleted);
-            //contactInfoData.AddressModel.Remove(addressToBeDeleted);
-            //contactInfoData.PhoneModel.Remove(phoneToBeDeleted);
 
             WriteRecords(contactInfoModelList);
         }
