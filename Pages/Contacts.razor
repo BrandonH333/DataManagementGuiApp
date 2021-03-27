@@ -1,0 +1,101 @@
+﻿@page "/contacts"
+@using DataManagementGuiApp.Models
+@using DataManagementGuiApp.Services
+@using Blazorise.DataGrid
+@inject ContactService ContactService
+@inject NavigationManager nav
+
+@code {
+    List<ContactInfoModel> contactInfoModel = new List<ContactInfoModel>();
+    private Modal modalRef;
+    Guid? contactIdToBeDeleted;
+    List<ContactModel> contactModelList = new List<ContactModel>();
+    List<PhoneModel> phoneModelList = new List<PhoneModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        contactInfoModel = ContactService.GetContactListData();
+        foreach (var contact in contactInfoModel)
+        {
+            contactModelList.Add(contact.ContactModel);
+            phoneModelList.Add(contact.PhoneModel);
+        }
+    }
+
+    private void OnCreateContactClick()
+    {
+        nav.NavigateTo("/contact/create");
+    }
+
+    private void OnEditClick(Guid contactId)
+    {
+        nav.NavigateTo("/contact/" + contactId);
+    }
+
+    private void OnDeleteClick(Guid contactId)
+    {
+        modalRef.Show();
+        contactIdToBeDeleted = contactId;
+    }
+
+    private void ConfirmDelete()
+    {
+        ContactService.DeleteContact(contactIdToBeDeleted);
+        modalRef.Hide();
+        nav.NavigateTo("/");
+        nav.NavigateTo("/contacts");
+    }
+
+    private void CancelDelete()
+    {
+        contactIdToBeDeleted = null;
+        modalRef.Hide();
+    }
+}
+
+<div class="contact-list-wrap">
+    @if (this.contactInfoModel == null)
+    {
+        <h1 class="header">Loading...</h1>
+    }
+    else if (this.contactInfoModel.Count == 0)
+    {
+        <h1>There are no contacts</h1>
+    }
+    else
+    {
+        <h1 class="header">Contact List</h1>
+        <div class="list-table" data-backdrop="false">
+            <Modal @ref="modalRef">
+                <ModalContent IsCentered="true">
+                    <ModalHeader>
+                        <ModalTitle>Delete Contact</ModalTitle>
+                        <CloseButton Clicked="@CancelDelete" />
+                    </ModalHeader>
+                    <ModalBody>
+                        <text>Are you sure you want to delete?</text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button Color="Color.Secondary" Clicked="@CancelDelete">Cancel</Button>
+                        <Button Color="Color.Danger" Clicked="@ConfirmDelete">Delete</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <DataGrid TItem="ContactModel" Data="@contactModelList" Sortable="true" Filterable="true" ShowPager="true" PageSize="20" Striped="true" Borderless="true" Bordered="true" Editable="true">
+                <DataGridColumn TItem="ContactModel" Field="@nameof(ContactModel.Id)" Caption="Id"></DataGridColumn>
+                <DataGridColumn TItem="ContactModel" Field="@nameof(ContactModel.FirstName)" Caption="First Name"></DataGridColumn>
+                <DataGridColumn TItem="ContactModel" Field="@nameof(ContactModel.LastName)" Caption="Last Name"></DataGridColumn>
+                <DataGridColumn TItem="ContactModel" Field="@nameof(ContactModel.Gender)" Caption="Gender"></DataGridColumn>
+                <DataGridCommandColumn TItem="ContactModel">
+                    <NewCommandTemplate Context="contact"></NewCommandTemplate>
+                    <EditCommandTemplate Context="contact"><Button Color="Color.Primary" Clicked="@(e=> OnEditClick(contact.Item.Id))">Edit</Button></EditCommandTemplate>
+                    <DeleteCommandTemplate Context="contact"><Button Color="Color.Danger" Clicked="@(e=> OnDeleteClick(contact.Item.Id))">Delete</Button></DeleteCommandTemplate>
+                </DataGridCommandColumn>
+            </DataGrid>
+        </div>
+    }
+    <div style="padding-top:1em;">
+        <Button Clicked="@OnCreateContactClick" Color="Color.Info">Create Contact</Button>
+    </div>
+</div>
+

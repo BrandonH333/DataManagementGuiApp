@@ -1,0 +1,123 @@
+﻿@page "/contact/create"
+@page "/contact/{ContactId:guid}"
+
+@using DataManagementGuiApp.Models
+@using DataManagementGuiApp.Services
+@inject ContactService ContactService
+
+@code {
+    [Parameter] public Guid ContactId { get; set; }
+
+    public ContactInfoModel contactInfo;
+    bool alertVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ContactId != Guid.Empty)
+        {
+            contactInfo = ContactService.GetContactById(ContactId);
+        }
+        else
+        {
+            contactInfo = new ContactInfoModel();
+        }
+    }
+
+    private void Save()
+    {        
+        alertVisible = ContactService.SaveContact(contactInfo);
+    }
+}
+
+<div class="content-wrap">
+    @if (ContactId != Guid.Empty)
+    {
+        <h2 class="header">Edit Contact</h2>
+    }
+    else
+    {
+        <h2 class="header">Create Contact</h2>
+    }
+    <EditForm Model="@contactInfo" OnValidSubmit="Save" Context="OrderService">
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">First Name</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.ContactModel.FirstName"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Last Name</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.ContactModel.LastName"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Gender</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <Select TValue="string" @bind-SelectedValue="@contactInfo.ContactModel.Gender">
+                    <SelectItem Value="@contactInfo.ContactModel.Gender">Female</SelectItem>
+                    <SelectItem Value="@contactInfo.ContactModel.Gender">Male</SelectItem>
+                </Select>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address1</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.Address1"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address2</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.Address2"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Apt</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.Apt"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">City</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.City"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">State</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.State"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Country</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.AddressModel.Country"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Phone Type</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <Select TValue="string" @bind-SelectedValue="@contactInfo.PhoneModel.Type">
+                    <SelectItem Value="@contactInfo.PhoneModel.Type">Home</SelectItem>
+                    <SelectItem Value="@contactInfo.PhoneModel.Type">Work</SelectItem>
+                    <SelectItem Value="@contactInfo.PhoneModel.Type">Cell</SelectItem>
+                </Select>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Phone Number</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@contactInfo.PhoneModel.Number"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Button id="save-button" Type="ButtonType.Submit" Color="Color.Dark">Save</Button>
+        <Alert Color="Color.Success" @bind-Visible="@alertVisible">
+            <AlertDescription>
+                Your save was successful
+            </AlertDescription>
+            <CloseButton />
+        </Alert>
+    </EditForm>
+</div>
