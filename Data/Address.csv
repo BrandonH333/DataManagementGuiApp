@@ -1,2 +1,4 @@
 ContactId,Address1,Address2,Apt,City,State,Country
-6f37c061-627d-4381-a44f-9a532252cf6e,1212 Test Ave.,,33,Northridge,CA,US
+f196ddc0-9756-4abe-b935-d14af6d6a578,1212 Test Ave.,,33,Northridge,California,United States
+da2f0354-ebea-4367-ae19-9db8c77c52f4,30301 Testing Ave.,,,Chatsworth,CA,US
+9f412dd6-aeb7-4cd1-98ea-759fa2d76024,93930 Validation Ln.,"Unit 12,13,14",,Santa Monica,CA,United States

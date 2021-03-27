@@ -10,6 +10,8 @@
 
     public ContactInfoModel contactInfo;
     bool alertVisible = false;
+    string[] genders = { "Male", "Female" };
+    string[] phoneTypes = {"Cell", "Home", "Work"};
 
     protected override async Task OnInitializedAsync()
     {
@@ -20,6 +22,8 @@
         else
         {
             contactInfo = new ContactInfoModel();
+            contactInfo.ContactModel.Gender = "Male";
+            contactInfo.PhoneModel.Type = "Cell";
         }
     }
 
@@ -55,8 +59,10 @@
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Gender</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
                 <Select TValue="string" @bind-SelectedValue="@contactInfo.ContactModel.Gender">
-                    <SelectItem Value="@contactInfo.ContactModel.Gender">Female</SelectItem>
-                    <SelectItem Value="@contactInfo.ContactModel.Gender">Male</SelectItem>
+                    @foreach(var gender in genders)
+                    {
+                        <SelectItem Value="gender">@gender</SelectItem>
+                    }
                 </Select>
             </FieldBody>
         </Field>
@@ -100,9 +106,10 @@
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Phone Type</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
                 <Select TValue="string" @bind-SelectedValue="@contactInfo.PhoneModel.Type">
-                    <SelectItem Value="@contactInfo.PhoneModel.Type">Home</SelectItem>
-                    <SelectItem Value="@contactInfo.PhoneModel.Type">Work</SelectItem>
-                    <SelectItem Value="@contactInfo.PhoneModel.Type">Cell</SelectItem>
+                    @foreach(var phoneType in phoneTypes)
+                    {
+                        <SelectItem Value="phoneType">@phoneType</SelectItem>
+                    }
                 </Select>
             </FieldBody>
         </Field>
